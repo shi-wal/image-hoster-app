@@ -2,6 +2,7 @@ package com.upgrad.technical.service.dao;
 
 import com.upgrad.technical.service.entity.ImageEntity;
 import com.upgrad.technical.service.entity.UserAuthTokenEntity;
+import com.upgrad.technical.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,18 +21,34 @@ public class ImageDao {
     }
 
     public UserAuthTokenEntity getUserAuthToken(final String accesstoken) {
-        return null;
+        try {
+            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accesstoken).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+
     }
 
     public ImageEntity getImage(final String imageUuid) {
-        return null;
+        try{
+            return entityManager.createNamedQuery("ImageEntityByUuid", ImageEntity.class).setParameter("uuid", imageUuid).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
     }
 
     public ImageEntity getImageById(final long Id) {
-        return null;
+        try{
+            return entityManager.createNamedQuery("ImageEntityByid", ImageEntity.class).setParameter("id", Id).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
     }
 
     public ImageEntity updateImage(final ImageEntity imageEntity) {
-        return null;
+        entityManager.merge(imageEntity);
+        return imageEntity;
     }
 }

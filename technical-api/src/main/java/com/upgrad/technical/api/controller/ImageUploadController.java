@@ -32,6 +32,7 @@ public class ImageUploadController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/imageupload", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ImageUploadResponse> imageupload(final ImageUploadRequest imageUploadRequest, @RequestHeader("authorization") final String authorization) throws UploadFailedException, UnsupportedEncodingException {
+
         final ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImage(imageUploadRequest.getImage());
         imageEntity.setName(imageUploadRequest.getName());
@@ -41,9 +42,11 @@ public class ImageUploadController {
         imageEntity.setCreated_at(ZonedDateTime.now());
         imageEntity.setStatus("REGISTERED");
 
-
         final ImageEntity createdimageEntity = imageUploadService.upload(imageEntity, authorization);
+
         ImageUploadResponse imageUploadResponse = new ImageUploadResponse().id(createdimageEntity.getUuid()).status("IMAGE SUCCESSFULLY REGISTERED");
-        return null;
+
+//        It will return uuid of uploaded image along with status.
+        return new ResponseEntity<ImageUploadResponse>(imageUploadResponse, HttpStatus.CREATED);
     }
 }

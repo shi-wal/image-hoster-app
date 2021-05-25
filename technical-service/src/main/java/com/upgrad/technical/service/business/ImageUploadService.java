@@ -25,7 +25,12 @@ public class ImageUploadService {
     public ImageEntity upload(ImageEntity imageEntity, final String authorizationToken) throws UploadFailedException {
         UserAuthTokenEntity userAuthTokenEntity = imageDao.getUserAuthToken(authorizationToken);
 
+//        Handling UploadFailedException
+        if (userAuthTokenEntity == null){
+            throw new UploadFailedException("UPLD-001", "You can't upload any image before signing in!");
+        }
+
         imageEntity.setUser_id(userAuthTokenEntity.getUser());
-        return imageEntity;
+        return imageDao.createImage(imageEntity);
     }
 }
