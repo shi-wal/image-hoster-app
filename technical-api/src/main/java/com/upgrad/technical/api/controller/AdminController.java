@@ -26,9 +26,10 @@ public class AdminController {
     public ResponseEntity<ImageDetailsResponse> getImage(@PathVariable("id") final String imageUuid, @RequestHeader("authorization") final String authorization) throws ImageNotFoundException, UnauthorizedException, UserNotSignedInException {
 
         final ImageEntity imageEntity = adminService.getImage(imageUuid, authorization);
-
         ImageDetailsResponse imageDetailsResponse = new ImageDetailsResponse().image(imageEntity.getImage()).id((int) imageEntity.getId()).name(imageEntity.getName()).description(imageEntity.getDescription()).status(imageEntity.getStatus());
-        return null;
+
+//        Here image details will be returned with the help of imageUuid.
+        return new ResponseEntity<ImageDetailsResponse>(imageDetailsResponse, HttpStatus.OK);
 
     }
 
@@ -43,10 +44,11 @@ public class AdminController {
         imageEntity.setStatus(updateImageRequest.getStatus());
         imageEntity.setDescription(updateImageRequest.getDescription());
 
-
         ImageEntity updatedimageEntity = adminService.updateImage(imageEntity, authorization);
         UpdateImageResponse updateImageResponse = new UpdateImageResponse().id((int) updatedimageEntity.getId()).status(updatedimageEntity.getStatus());
-        return null;
+
+//        Updated image details will be returned
+        return new ResponseEntity<UpdateImageResponse>(updateImageResponse, HttpStatus.OK);
 
     }
 

@@ -27,15 +27,44 @@ public class AdminService {
 
         UserAuthTokenEntity userAuthTokenEntity = imageDao.getUserAuthToken(authorization);
 
+//        Handling the UserNotSignedInException
+        if(userAuthTokenEntity == null){
+            throw new UserNotSignedInException("SIGN-001","You're not signed in, sign in first to get your image deails!");
+        }
+
         String role = userAuthTokenEntity.getUser().getRole();
-        return null;
+        if (role.equals("admin")){
+            ImageEntity imageEntity= imageDao.getImage(imageUuid);
+//         Handling the ImageNotFoundException
+            if (imageEntity == null){
+                throw new ImageNotFoundException("IMG-001", "Image not found!");
+            }
+            return imageEntity;
+        }
+//        Handling the UnauthorizedException
+        throw new UnauthorizedException("ATH-001", "You are not authorized to get the image!");
      }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public ImageEntity updateImage(final ImageEntity imageEntity, final String authorization) throws ImageNotFoundException, UnauthorizedException, UserNotSignedInException {
         UserAuthTokenEntity userAuthTokenEntity = imageDao.getUserAuthToken(authorization);
+//        Handling the UserNotSignedInException
+        if(userAuthTokenEntity == null){
+            throw new UserNotSignedInException("SIGN-001","You're not signed in, sign in first to get your image deails!");
+        }
 
         String role = userAuthTokenEntity.getUser().getRole();
-        return null;
+        if (role.equals("admin")){
+            ImageEntity imageForUpdate = imageDao.getImage(imageEntity.getUuid());
+
+//            Handling the ImageNotFoundException
+            if (imageForUpdate == null ){
+                throw new ImageNotFoundException("IMG-001", "Image not found!");
+            }
+           return imageDao.updateImage(imageEntity);
+        }
+
+//        Handling the UnauthorizedException
+        throw new UnauthorizedException("ATH-002", "You are not authorized to update this image!");
     }
 }
