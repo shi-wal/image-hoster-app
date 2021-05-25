@@ -24,6 +24,7 @@ public class UserDao {
 
     public UserEntity getUserByEmail(final String email) {
         try{
+//            query for getting user details by passing email
         return entityManager.createNamedQuery("userByEmail", UserEntity.class).setParameter("email", email).getSingleResult();
         }
         catch (NoResultException nre){
@@ -42,9 +43,9 @@ public class UserDao {
 
     public UserAuthTokenEntity getUserAuthToken(final String accessToken) {
         try {
+//            query for getting authentication toke entity of user with given access-token
             return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
         } catch (NoResultException nre) {
-
             return null;
         }
 
